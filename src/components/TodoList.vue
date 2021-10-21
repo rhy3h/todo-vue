@@ -12,35 +12,14 @@
       enter-active-class="animated fadeInUp"
       leave-active-class="animated fadeOutDown"
     >
-      <div
-        v-for="(todo, index) in todosFiltered"
+      <todo-item
+        v-for="todo in todosFiltered"
         :key="todo.id"
-        class="todo-item"
-      >
-        <div class="todo-item-left">
-          <input type="checkbox" v-model="todo.completed" />
-          <div
-            v-if="!todo.editing"
-            @dblclick="editTodo(todo)"
-            class="todo-item-label"
-            :class="{ completed: todo.completed }"
-          >
-            {{ todo.title }}
-          </div>
-          <input
-            v-else
-            class="todo-item-edit"
-            type="text"
-            v-model="todo.title"
-            @blur="doneEdit(todo)"
-            @keyup.enter="doneEdit(todo)"
-            @keyup.esc="cancelEdit(todo)"
-            v-focus
-          />
-        </div>
-
-        <div class="remove-item" @click="removeTodo(index)">&times;</div>
-      </div>
+        :todo="todo"
+        :checkAll="!anyRemaining"
+        @removeTodo="removeTodo"
+        @finishedEdit="finishedEdit"
+      ></todo-item>
     </transition-group>
     <div class="extra-container">
       <div>
@@ -87,8 +66,13 @@
 </template>
 
 <script>
+import TodoItem from "./TodoItem.vue";
+
 export default {
   name: "todo-list",
+  components: {
+    TodoItem,
+  },
   props: {
     msg: String,
   },
@@ -130,14 +114,6 @@ export default {
       return this.todos.filter((todo) => todo.completed).length > 0;
     },
   },
-  directives: {
-    focus: {
-      // directive definition
-      inserted: function (el) {
-        el.focus();
-      },
-    },
-  },
   methods: {
     addTodo() {
       if (this.newTodo.trim().length == 0) {
@@ -153,10 +129,10 @@ export default {
       this.idForTodo++;
     },
     editTodo(todo) {
+      this.beforeEditCache = todo.title;
       todo.editing = true;
     },
     doneEdit(todo) {
-      console.log("ASD");
       if (todo.title.trim().length == 0) {
         todo.title = this.beforeEditCache;
       }
@@ -167,7 +143,8 @@ export default {
       todo.title = this.beforeEditCache;
       todo.editing = false;
     },
-    removeTodo(index) {
+    removeTodo(id) {
+      const index = this.todos.findIndex((item) => item.id == id);
       this.todos.splice(index, 1);
     },
     checkAllTodos() {
@@ -175,6 +152,10 @@ export default {
     },
     clearCompleted() {
       this.todos = this.todos.filter((todo) => !todo.completed);
+    },
+    finishedEdit(data) {
+      const index = this.todos.findIndex((item) => item.id == data.id);
+      this.todos.splice(index, 1, data);
     },
   },
 };
