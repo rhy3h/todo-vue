@@ -17,48 +17,22 @@
         :key="todo.id"
         :todo="todo"
         :checkAll="!anyRemaining"
-        @removeTodo="removeTodo"
-        @finishedEdit="finishedEdit"
       ></todo-item>
     </transition-group>
+
     <div class="extra-container">
-      <div>
-        <label
-          ><input
-            type="checkbox"
-            :checked="!anyRemaining"
-            @change="checkAllTodos"
-          />
-          Check All</label
-        >
-      </div>
-      <div>{{ remaining }} items left</div>
+      <todo-check-all :anyRemaining="anyRemaining"></todo-check-all>
+      <todo-item-remaining :remaining="remaining"></todo-item-remaining>
     </div>
 
     <div class="extra-container">
-      <div>
-        <button :class="{ active: filter == 'all' }" @click="filter = 'all'">
-          All
-        </button>
-        <button
-          :class="{ active: filter == 'active' }"
-          @click="filter = 'active'"
-        >
-          Active
-        </button>
-        <button
-          :class="{ active: filter == 'completed' }"
-          @click="filter = 'completed'"
-        >
-          Completed
-        </button>
-      </div>
+      <todo-filter></todo-filter>
 
       <div>
         <transition name="fade">
-          <button v-if="showClearCompletedButton" @click="clearCompleted">
-            Clear Completed
-          </button>
+          <todo-clear-completed
+            :showClearCompletedButton="showClearCompletedButton"
+          ></todo-clear-completed>
         </transition>
       </div>
     </div>
@@ -67,11 +41,19 @@
 
 <script>
 import TodoItem from "./TodoItem.vue";
+import TodoItemRemaining from "./TodoItemsRemaining.vue.vue";
+import TodoCheckAll from "./TodoCheckAll.vue";
+import TodoFilter from "./TodoFilter.vue";
+import TodoClearCompleted from "./TodoClearCompleted.vue";
 
 export default {
   name: "todo-list",
   components: {
     TodoItem,
+    TodoItemRemaining,
+    TodoCheckAll,
+    TodoFilter,
+    TodoClearCompleted,
   },
   props: {
     msg: String,
@@ -92,6 +74,20 @@ export default {
         { id: 2, title: "Take over world", completed: false, editing: false },
       ],
     };
+  },
+  created() {
+    this.$myBus.on("removeTodo", (id) => this.removeTodo(id));
+    this.$myBus.on("finishedEdit", (data) => this.finishedEdit(data));
+    this.$myBus.on("checkAllTodos", (check) => this.checkAllTodos(check));
+    this.$myBus.on("filterChanged", (filter) => (this.filter = filter));
+    this.$myBus.on("clearCompletedTodos", () => this.clearCompleted());
+  },
+  beforeUnmount() {
+    this.$myBus.off("removeTodo", (id) => this.removeTodo(id));
+    this.$myBus.off("finishedEdit", (data) => this.finishedEdit(data));
+    this.$myBus.off("checkAllTodos", (check) => this.checkAllTodos(check));
+    this.$myBus.off("filterChanged", (filter) => (this.filter = filter));
+    this.$myBus.off("clearCompletedTodos", () => this.clearCompleted());
   },
   computed: {
     remaining() {

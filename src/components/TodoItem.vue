@@ -20,8 +20,7 @@
         @keyup.esc="cancelEdit"
       />
     </div>
-
-    <div class="remove-item" @click="removeTodo(todo.id)">&times;</div>
+    <span class="remove-item" @click="removeTodo(todo.id)">&times;</span>
   </div>
 </template>
 <script>
@@ -52,7 +51,7 @@ export default {
   },
   methods: {
     removeTodo(id) {
-      this.$emit("removeTodo", id);
+      this.$myBus.emit("removeTodo", id);
     },
     editTodo() {
       this.beforeEditCache = this.title;
@@ -63,7 +62,7 @@ export default {
         this.title = this.beforeEditCache;
       }
       this.editing = false;
-      this.$emit("finishedEdit", {
+      this.$myBus.emit("finishedEdit", {
         id: this.id,
         title: this.title,
         completed: this.completed,
