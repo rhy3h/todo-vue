@@ -21,15 +21,14 @@
 <script>
 export default {
   name: "todo-filter",
-  data() {
-    return {
-      filter: "all",
-    };
+  computed: {
+    filter() {
+      return this.$store.state.filter;
+    },
   },
   methods: {
     changeFilter(filter) {
-      this.filter = filter;
-      this.$myBus.emit("filterChanged", filter);
+      this.$store.dispatch("updateFilter", filter);
     },
   },
 };

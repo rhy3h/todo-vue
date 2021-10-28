@@ -14,15 +14,14 @@
 <script>
 export default {
   name: "todo-check-all",
-  props: {
-    anyRemaining: {
-      type: Boolean,
-      required: true,
+  computed: {
+    anyRemaining() {
+      return this.$store.getters.anyRemaining;
     },
   },
   methods: {
     checkAllTodos() {
-      this.$myBus.emit("checkAllTodos", this.anyRemaining);
+      this.$store.dispatch("checkAllTodos", event.target.checked);
     },
   },
 };

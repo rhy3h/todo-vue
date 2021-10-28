@@ -21,8 +21,8 @@
     </transition-group>
 
     <div class="extra-container">
-      <todo-check-all :anyRemaining="anyRemaining"></todo-check-all>
-      <todo-item-remaining :remaining="remaining"></todo-item-remaining>
+      <todo-check-all></todo-check-all>
+      <todo-item-remaining></todo-item-remaining>
     </div>
 
     <div class="extra-container">
@@ -30,9 +30,7 @@
 
       <div>
         <transition name="fade">
-          <todo-clear-completed
-            :showClearCompletedButton="showClearCompletedButton"
-          ></todo-clear-completed>
+          <todo-clear-completed></todo-clear-completed>
         </transition>
       </div>
     </div>
@@ -41,7 +39,7 @@
 
 <script>
 import TodoItem from "./TodoItem.vue";
-import TodoItemRemaining from "./TodoItemsRemaining.vue.vue";
+import TodoItemRemaining from "./TodoItemsRemaining.vue";
 import TodoCheckAll from "./TodoCheckAll.vue";
 import TodoFilter from "./TodoFilter.vue";
 import TodoClearCompleted from "./TodoClearCompleted.vue";
@@ -63,51 +61,20 @@ export default {
       newTodo: "",
       idForTodo: 3,
       beforeEditCache: "",
-      filter: "all",
-      todos: [
-        {
-          id: 1,
-          title: "Finish Vue Screencast",
-          completed: false,
-          editing: false,
-        },
-        { id: 2, title: "Take over world", completed: false, editing: false },
-      ],
     };
-  },
-  created() {
-    this.$myBus.on("removeTodo", (id) => this.removeTodo(id));
-    this.$myBus.on("finishedEdit", (data) => this.finishedEdit(data));
-    this.$myBus.on("checkAllTodos", (check) => this.checkAllTodos(check));
-    this.$myBus.on("filterChanged", (filter) => (this.filter = filter));
-    this.$myBus.on("clearCompletedTodos", () => this.clearCompleted());
-  },
-  beforeUnmount() {
-    this.$myBus.off("removeTodo", (id) => this.removeTodo(id));
-    this.$myBus.off("finishedEdit", (data) => this.finishedEdit(data));
-    this.$myBus.off("checkAllTodos", (check) => this.checkAllTodos(check));
-    this.$myBus.off("filterChanged", (filter) => (this.filter = filter));
-    this.$myBus.off("clearCompletedTodos", () => this.clearCompleted());
   },
   computed: {
     remaining() {
-      return this.todos.filter((todo) => !todo.completed).length;
+      return this.$store.getters.remaining;
     },
     anyRemaining() {
-      return this.remaining != 0;
+      return this.$store.getters.anyRemaining;
     },
     todosFiltered() {
-      if (this.filter == "all") {
-        return this.todos;
-      } else if (this.filter == "active") {
-        return this.todos.filter((todo) => !todo.completed);
-      } else if (this.filter == "completed") {
-        return this.todos.filter((todo) => todo.completed);
-      }
-      return this.todos;
+      return this.$store.getters.todosFiltered;
     },
     showClearCompletedButton() {
-      return this.todos.filter((todo) => todo.completed).length > 0;
+      return this.$store.getters.showClearCompletedButton;
     },
   },
   methods: {
@@ -115,43 +82,14 @@ export default {
       if (this.newTodo.trim().length == 0) {
         return;
       }
-      this.todos.push({
+
+      this.$store.dispatch("addTodo", {
         id: this.idForTodo,
         title: this.newTodo,
-        completed: false,
       });
 
       this.newTodo = "";
       this.idForTodo++;
-    },
-    editTodo(todo) {
-      this.beforeEditCache = todo.title;
-      todo.editing = true;
-    },
-    doneEdit(todo) {
-      if (todo.title.trim().length == 0) {
-        todo.title = this.beforeEditCache;
-      }
-      this.beforeEditCache = todo.title;
-      todo.editing = false;
-    },
-    cancelEdit(todo) {
-      todo.title = this.beforeEditCache;
-      todo.editing = false;
-    },
-    removeTodo(id) {
-      const index = this.todos.findIndex((item) => item.id == id);
-      this.todos.splice(index, 1);
-    },
-    checkAllTodos() {
-      this.todos.forEach((todo) => (todo.completed = event.target.checked));
-    },
-    clearCompleted() {
-      this.todos = this.todos.filter((todo) => !todo.completed);
-    },
-    finishedEdit(data) {
-      const index = this.todos.findIndex((item) => item.id == data.id);
-      this.todos.splice(index, 1, data);
     },
   },
 };
