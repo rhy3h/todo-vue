@@ -42,12 +42,17 @@ export default {
       completed: this.todo.completed,
       editing: this.todo.editing,
       beforeEditCache: this.todo.beforeEditCache,
+      timestamp: new Date(),
     };
   },
   watch: {
     checkAll() {
       this.completed = this.checkAll ? true : this.todo.completed;
     },
+    todo() {
+      this.title = this.todo.title;
+      this.completed = this.todo.completed;
+    }
   },
   methods: {
     removeTodo(id) {
@@ -62,12 +67,13 @@ export default {
         this.title = this.beforeEditCache;
       }
       this.editing = false;
-
+      
       this.$store.dispatch("updateTodo", {
         id: this.id,
         title: this.title,
         completed: this.completed,
         editing: this.editing,
+        timestamp: this.timestamp,
       });
     },
     cancelEdit() {

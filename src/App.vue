@@ -1,38 +1,66 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" class="logo" />
-  <todo-list></todo-list>
+    <div id="app">
+        <ul class="nav">
+            <li><router-link to="/">Home</router-link></li>
+            <li><router-link to="/todo">App</router-link></li>
+            <li><router-link to="/about">About</router-link></li>
+            <li><router-link to="/login">Login</router-link></li>
+            <li><router-link to="/register">Register</router-link></li>
+        </ul>
+        <router-view></router-view>
+    </div>
 </template>
 
 <script>
-import TodoList from "./components/TodoList.vue";
 export default {
-  name: "App",
-  components: {
-    TodoList,
-  },
-};
+
+}
 </script>
 
 <style>
 * {
-  box-sizing: border-box;
-}
-.container {
-  max-width: 600px;
-  margin: 0 auto;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-  font-size: 24px;
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #2c3e50;
+    font-size: 24px;
+    height: 100vh;
 }
-.logo {
-  display: block;
-  margin: 20px auto;
-  height: 75px;
+.flex-center {
+    display: flex;
+    justify-content: center;
+}
+.nav {
+    /* display: flex; */
+    list-style: none;
+    padding: 15px 0;
+    margin: 0;
+    justify-content: flex-end;
+    background: #F5F8FA;
+    border-bottom: 1px solid lightgrey;
+    margin-bottom: 24px;
+}
+.nav a {
+    color: #636b6f;
+    padding: 0 25px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: .1rem;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+@media screen and (min-width:768px) {
+  ul{
+    display: flex;
+  }
+  ul li{
+    flex:1;
+  }
 }
 </style>
