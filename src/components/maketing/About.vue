@@ -1,5 +1,3 @@
 <template>
-  <div>
-    <h1>About Page content here</h1>
-  </div>
+  <div class="flex-center">About Page content here</div>
 </template>

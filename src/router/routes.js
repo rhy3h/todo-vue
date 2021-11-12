@@ -1,31 +1,50 @@
-
-import TodoApp from '../components/TodoApp'
-import LadingPage from '../components/maketing/LandingPage'
-import About from '../components/maketing/About'
-import Login from '../components/auth/Login'
-import Register from '../components/auth/Register'
+import App from "../App";
+import About from "../components/maketing/About";
+import Login from "../components/auth/Login";
+import Register from "../components/auth/Register";
+import Logout from "../components/auth/Logout";
+import LandingPage from "../components/maketing/LandingPage";
 
 const routes = [
   {
-    path: '/',
-    component: LadingPage
+    path: "/",
+    name: "home",
+    component: LandingPage,
   },
   {
-    path: '/todo',
-    component: TodoApp
+    path: "/todo",
+    name: "todo",
+    component: App,
+    meta: {
+      requireAuth: true,
+    },
   },
   {
-    path: '/about',
-    component: About
+    path: "/about",
+    name: "about",
+    component: About,
   },
   {
-    path: '/login',
-    component: Login
+    path: "/login",
+    name: "login",
+    component: Login,
+    meta: {
+      requireVisitor: true,
+    },
   },
   {
-    path: '/register',
-    component: Register
+    path: "/register",
+    name: "register",
+    component: Register,
+    meta: {
+      requireVisitor: true,
+    },
   },
-]
+  {
+    path: "/logout",
+    name: "logout",
+    component: Logout,
+  },
+];
 
-export default routes
+export default routes;

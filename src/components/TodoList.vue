@@ -8,7 +8,10 @@
       @keyup.enter="addTodo"
     />
     <div v-if="$store.state.loading" class="lds-ring">
-      <div></div><div></div><div></div><div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
     </div>
     <transition-group
       name="fade"
@@ -67,8 +70,8 @@ export default {
     };
   },
   created() {
-    this.$store.dispatch('initRealtimeListeners');
-    this.$store.dispatch('retrieveTodos');
+    this.$store.dispatch("initRealtimeListeners");
+    this.$store.dispatch("retrieveTodos");
   },
   computed: {
     remaining() {
