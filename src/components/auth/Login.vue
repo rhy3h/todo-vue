@@ -1,7 +1,13 @@
 <template>
-  <div class="login-form">
+  <div class="page-wrapper login-form">
     <h2 class="login-heading">Login</h2>
     <form action="#" @submit.prevent="login">
+      <div v-if="successMessage" class="success-message">
+        {{ successMessage }}
+      </div>
+
+      <div v-if="serverError" class="server-error">{{ serverError }}</div>
+
       <div class="form-control">
         <label for="email">Email</label>
         <input
@@ -34,10 +40,20 @@
 <script>
 export default {
   name: "login",
+  props: {
+    dataSuccessMessage: {
+      type: String,
+    },
+    dataEmail: {
+      type: String,
+    },
+  },
   data() {
     return {
-      email: "",
+      email: this.dataEmail || "",
       password: "",
+      serverError: "",
+      successMessage: this.dataSuccessMessage,
     };
   },
   methods: {
@@ -50,6 +66,12 @@ export default {
         })
         .then(() => {
           this.$router.push({ name: "todo" });
+        })
+        .catch((error) => {
+          console.log(error.code);
+          this.serverError = error.code;
+          this.password = "";
+          this.successMessage = "";
         });
     },
   },

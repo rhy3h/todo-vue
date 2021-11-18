@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 initializeApp({
-  apiKey: "AIzaSyCzxW34OXu2ih50id17Sk8eW9q74LXfRek",
+  apiKey: process.env.VUE_APP_API,
   authDomain: "rhy3h-todo.firebaseapp.com",
   projectId: "rhy3h-todo",
   storageBucket: "rhy3h-todo.appspot.com",

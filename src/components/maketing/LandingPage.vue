@@ -1,3 +1,3 @@
 <template>
-  <div class="flex-center">Landing Page content here</div>
+  <div class="page-wrapper flex-center">Todo Vue App</div>
 </template>

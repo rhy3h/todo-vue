@@ -8,6 +8,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 
 import db from "./firebase";
@@ -91,6 +92,17 @@ const store = createStore({
     },
   },
   actions: {
+    retrieveEmail() {
+      return new Promise((resolve, reject) => {
+        onAuthStateChanged(getAuth(), (user) => {
+          if (user) {
+            resolve(user.email);
+          } else {
+            reject(null);
+          }
+        });
+      });
+    },
     clearTodos(context) {
       context.commit("clearTodos");
     },
@@ -107,7 +119,6 @@ const store = createStore({
               resolve(response);
             })
             .catch((error) => {
-              console.log(error);
               localStorage.removeItem("accessToken");
               context.commit("destroyToken");
               reject(error);
@@ -133,8 +144,6 @@ const store = createStore({
             resolve(response);
           })
           .catch((error) => {
-            console.log(error);
-
             reject(error);
           });
       });
@@ -149,7 +158,6 @@ const store = createStore({
             resolve(response);
           })
           .catch((error) => {
-            console.log(error);
             reject(error);
           });
       });

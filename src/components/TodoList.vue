@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="name-container">Welcome, {{ email }}</div>
     <input
       type="text"
       class="todo-input"
@@ -67,11 +68,15 @@ export default {
       newTodo: "",
       idForTodo: 3,
       beforeEditCache: "",
+      email: "",
     };
   },
   created() {
     this.$store.dispatch("initRealtimeListeners");
     this.$store.dispatch("retrieveTodos");
+    this.$store.dispatch("retrieveEmail").then((response) => {
+      this.email = response;
+    });
   },
   computed: {
     remaining() {
@@ -164,6 +169,11 @@ export default {
   padding-top: 14px;
   margin-bottom: 14px;
 }
+
+.name-container {
+  margin-bottom: 16px;
+}
+
 button {
   font-size: 14px;
   background-color: white;

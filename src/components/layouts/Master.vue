@@ -14,7 +14,17 @@
         <router-link :to="{ name: 'logout' }">Logout</router-link>
       </li>
     </ul>
-    <router-view></router-view>
+
+    <router-view v-slot="{ Component }">
+      <transition
+        name="router-animation"
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
+        mode="out-in"
+      >
+        <component :is="Component" />
+      </transition>
+    </router-view>
   </div>
 </template>
 
@@ -29,6 +39,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~vue-toastification/dist/index.css";
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -122,5 +134,27 @@ label {
   &:hover {
     background: darken(#60bd4f, 10%);
   }
+}
+
+.server-error {
+  margin-bottom: 12px;
+  font-size: 16px;
+  padding: 10px 16px;
+  color: #a94442;
+  background: #f3dede;
+  border-radius: 4px;
+}
+
+.success-message {
+  background-color: #dff0d8;
+  color: #3c763d;
+  margin-bottom: 12px;
+  font-size: 16px;
+  padding: 10px 16px;
+  border-radius: 4px;
+}
+
+.page-wrapper {
+  animation-duration: 2s;
 }
 </style>

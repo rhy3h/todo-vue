@@ -1,7 +1,13 @@
 <template>
-  <div class="login-form">
+  <div class="page-wrapper login-form">
     <h2 class="login-heading">Register</h2>
     <form action="#" @submit.prevent="register">
+      <div v-if="successMessage" class="success-message">
+        {{ successMessage }}
+      </div>
+
+      <div v-if="serverError" class="server-error">{{ serverError }}</div>
+
       <div class="form-control">
         <label for="email">Email</label>
         <input
@@ -32,12 +38,19 @@
 </template>
 
 <script>
+import { useToast, POSITION } from "vue-toastification";
+
 export default {
   name: "register",
+  created() {
+    this.toast = useToast();
+  },
   data() {
     return {
       email: "",
       password: "",
+      serverError: "",
+      successMessage: "",
     };
   },
   methods: {
@@ -48,7 +61,24 @@ export default {
           password: this.password,
         })
         .then(() => {
-          this.$router.push({ name: "login" });
+          this.serverError = "";
+          this.successMessage = "Registered Successfully!";
+
+          this.toast.success(this.successMessage, {
+            position: POSITION.BOTTOM_RIGHT,
+            timeout: 2000,
+          });
+          this.$router.push({
+            name: "login",
+            params: {
+              dataSuccessMessage: this.successMessage,
+              dataEmail: this.email,
+            },
+          });
+        })
+        .catch((error) => {
+          this.successMessage = "";
+          this.serverError = error.code;
         });
     },
   },

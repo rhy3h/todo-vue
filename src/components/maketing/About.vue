@@ -1,3 +1,5 @@
 <template>
-  <div class="flex-center">About Page content here</div>
+  <div class="page-wrapper flex-center">
+    This is a project for learning Vue.js
+  </div>
 </template>
