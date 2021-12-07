@@ -16,14 +16,7 @@
     </ul>
 
     <router-view v-slot="{ Component }">
-      <transition
-        name="router-animation"
-        enter-active-class="animated fadeIn"
-        leave-active-class="animated fadeOut"
-        mode="out-in"
-      >
-        <component :is="Component" />
-      </transition>
+      <component :is="Component" />
     </router-view>
   </div>
 </template>
@@ -152,9 +145,5 @@ label {
   font-size: 16px;
   padding: 10px 16px;
   border-radius: 4px;
-}
-
-.page-wrapper {
-  animation-duration: 2s;
 }
 </style>
